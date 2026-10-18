@@ -1,0 +1,63 @@
+[settings]
+experimental = true
+pin = true
+
+[hooks]
+postinstall = "bun install --frozen-lockfile"
+
+[env]
+_.path = "node_modules/.bin"
+
+[tools]
+bun = "1.4.3"
+node = "24.18.1"
+
+[tasks.check]
+description = "Typecheck, lint, test, check formatting, and typecheck the Swift shell"
+run = "bun run typecheck && bun run lint && bun run test && bun run format:check && mise run swift:check"
+
+[tasks.typecheck]
+run = "bun run typecheck"
+
+[tasks.lint]
+run = "bun run lint"
+
+[tasks.format]
+run = "bun run format"
+
+[tasks."format:check"]
+run = "bun run format:check"
+
+[tasks.test]
+run = "bun run test"
+
+[tasks."test:watch"]
+run = "bun run test:watch"
+
+[tasks.prepare]
+run = "bun run prepare"
+
+[tasks.daemon]
+description = "Run the daemon on stdio (JSON lines), as the menu bar app does"
+run = "bun src/main.ts daemon"
+
+[tasks.cli]
+description = "Run the insomnia CLI from source, e.g. `mise run cli -- status`"
+run = "bun src/main.ts"
+
+[tasks."swift:check"]
+description = "Typecheck the Swift menu bar shell"
+run = "swiftc -swift-version 5 -typecheck macos/Insomnia/*.swift"
+
+[tasks."app:build"]
+description = "Build build/Insomnia.app (compiled daemon + Swift shell)"
+run = "scripts/build-app.sh"
+
+[tasks."app:install"]
+description = "Build and copy Insomnia.app to ~/Applications"
+depends = ["app:build"]
+run = "scripts/install-app.sh"
+
+[tasks."effect-solutions"]
+description = "Browse Effect Solutions guides, e.g. `list` or `show <topic>`"
+run = "bunx effect-solutions"

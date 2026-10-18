@@ -1,0 +1,36 @@
+{
+  "name": "insomnia",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "daemon": "bun src/main.ts daemon",
+    "cli": "bun src/main.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "prepare": "effect-tsgo patch"
+  },
+  "dependencies": {
+    "@effect/platform-bun": "4.0.4",
+    "effect": "4.0.4"
+  },
+  "devDependencies": {
+    "@effect/language-service": "0.87.4",
+    "@effect/tsgo": "0.52.0",
+    "@effect/vitest": "4.0.4",
+    "@mpsuesser/oxlint-plugin-effect": "0.6.0",
+    "@types/bun": "1.4.3",
+    "oxfmt": "0.73.0",
+    "oxlint": "1.88.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.4"
+  },
+  "overrides": {
+    "@effect/platform-bun": "4.0.4",
+    "@effect/platform-node-shared": "4.0.4",
+    "effect": "4.0.4"
+  }
+}
