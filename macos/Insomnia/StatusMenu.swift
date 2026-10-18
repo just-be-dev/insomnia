@@ -103,7 +103,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
                 symbol = "eye.fill"
                 if let endsAt { title = Self.shortRemaining(until: endsAt) }
             case .idle:
-                symbol = status.sleepDisabled ? "exclamationmark.triangle" : "moon.zzz"
+                symbol = status.sleepDisabled ? "exclamationmark.triangle" : "moon.zzz.fill"
             }
         }
         button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: "Insomnia")
