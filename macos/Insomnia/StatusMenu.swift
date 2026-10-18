@@ -100,7 +100,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         case (true, let status?):
             switch status.session {
             case .active(_, let endsAt):
-                symbol = "eye.fill"
+                symbol = "cup.and.saucer.fill"
                 if let endsAt { title = Self.shortRemaining(until: endsAt) }
             case .idle:
                 symbol = status.sleepDisabled ? "exclamationmark.triangle" : "moon.zzz.fill"
