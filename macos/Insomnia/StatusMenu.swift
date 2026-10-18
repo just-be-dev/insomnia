@@ -100,13 +100,15 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         case (true, let status?):
             switch status.session {
             case .active(_, let endsAt):
-                symbol = "cup.and.saucer.fill"
+                symbol = "cup.and.heat.waves.fill"
                 if let endsAt { title = Self.shortRemaining(until: endsAt) }
             case .idle:
                 symbol = status.sleepDisabled ? "exclamationmark.triangle" : "moon.zzz.fill"
             }
         }
+        // Newer symbols (steaming cup) fall back to the plain cup on older macOS.
         button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: "Insomnia")
+            ?? NSImage(systemSymbolName: "cup.and.saucer.fill", accessibilityDescription: "Insomnia")
         button.image?.isTemplate = true
         button.title = title.isEmpty ? "" : " \(title)"
         button.imagePosition = .imageLeading
