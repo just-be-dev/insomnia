@@ -37,10 +37,20 @@ export const parseBattery = (pmsetBatt: string): Battery | null => {
 /**
  * True when `sudo -n -l` lists a NOPASSWD rule covering both exact disablesleep commands.
  * `sudo -l <cmd>` alone isn't enough: it succeeds for `(ALL) ALL`, which still asks for a password.
+ * Without a terminal, sudo wraps rules at 80 columns onto deeper-indented lines, so rules are
+ * rejoined first: a rule starts with `(runas)`, anything else continues the previous rule.
  */
 export const parseSudoList = (sudoList: string): boolean => {
-  const passwordless = sudoList
-    .split("\n")
+  const lines = sudoList.split("\n");
+  const header = lines.findIndex((line) => line.includes("may run the following commands"));
+  const rules: Array<string> = [];
+  for (const line of header === -1 ? [] : lines.slice(header + 1)) {
+    const trimmed = line.trim();
+    if (trimmed.length === 0) continue;
+    if (trimmed.startsWith("(") || rules.length === 0) rules.push(trimmed);
+    else rules[rules.length - 1] += ` ${trimmed}`;
+  }
+  const passwordless = rules
     .flatMap((line) => {
       const index = line.indexOf("NOPASSWD:");
       return index === -1 ? [] : line.slice(index + "NOPASSWD:".length).split(",");

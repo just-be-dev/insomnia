@@ -113,6 +113,18 @@ describe("parseSudoList", () => {
     ).toBe(true);
   });
 
+  it("rejoins rules sudo wrapped at 80 columns (real output without a tty)", () => {
+    const wrapped = [
+      "User just-be may run the following commands on G3YQ4F3926:",
+      "    (ALL) ALL",
+      "    (root) NOPASSWD: /usr/bin/pmset -a disablesleep 0, /usr/bin/pmset -a",
+      "        disablesleep 1",
+      "    (root) NOPASSWD: /usr/local/sbin/momadmin.sh",
+      "",
+    ].join("\n");
+    expect(parseSudoList(wrapped)).toBe(true);
+  });
+
   it("needs both on and off to be passwordless", () => {
     expect(parseSudoList(listing("(root) NOPASSWD: /usr/bin/pmset -a disablesleep 1"))).toBe(false);
   });
