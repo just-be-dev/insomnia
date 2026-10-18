@@ -7,6 +7,7 @@ import { ChildProcessSpawner } from "effect/process/ChildProcessSpawner";
 import { PrivilegeInstallFailed } from "../../session/model.ts";
 import { PrivilegeInstaller } from "../../session/service.ts";
 import { exec } from "./exec.ts";
+import { stateDirConfig } from "./store.ts";
 import { PMSET, disableSleepArgs } from "./pmset.ts";
 
 export const SUDOERS_PATH = "/etc/sudoers.d/insomnia";
@@ -53,6 +54,7 @@ export const privilegeInstallerLayer = Layer.effect(
     const path = yield* Path.Path;
     const spawner = yield* ChildProcessSpawner;
     const provide = Effect.provideService(ChildProcessSpawner, spawner);
+    const stateDir = yield* stateDirConfig;
 
     const install = Effect.scoped(
       Effect.gen(function* () {
@@ -60,7 +62,9 @@ export const privilegeInstallerLayer = Layer.effect(
           try: () => sudoersRule(userInfo().username),
           catch: (error) => new PrivilegeInstallFailed({ detail: String(error) }),
         });
-        const dir = yield* fs.makeTempDirectoryScoped({ prefix: "insomnia-" });
+        // Stage under our own state dir rather than $TMPDIR, which a launcher can leave stale.
+        yield* fs.makeDirectory(stateDir, { recursive: true });
+        const dir = yield* fs.makeTempDirectoryScoped({ directory: stateDir, prefix: "sudoers-" });
         const file = path.join(dir, "sudoers");
         yield* fs.writeFileString(file, rule);
         // visudo validates before install, so a bad file can never lock out sudo.
