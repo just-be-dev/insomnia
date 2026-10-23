@@ -22,7 +22,9 @@ src/
     store.ts                 state.json store (Schema-decoded, atomic writes)
     layer.ts                 all macOS adapters
 macos/Insomnia/              Swift shell: main.swift, StatusMenu.swift, DaemonClient.swift, Protocol.swift, Info.plist
-scripts/                     build-app.sh, install-app.sh
+scripts/                     build-app.sh (ARCH, VERSION, OUT), install-app.sh, package-release.sh
+install.sh                   curl | bash installer: downloads the latest GitHub release zip
+.github/workflows/release.yml  tag v* → check, package both arches, publish release
 ```
 
 ## Rules

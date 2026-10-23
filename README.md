@@ -9,6 +9,14 @@ A menu bar app that keeps your Mac awake, with the lid closed too, so Wi‑Fi an
 ## Install
 
 ```sh
+curl -fsSL https://raw.githubusercontent.com/just-be-dev/insomnia/main/install.sh | bash
+```
+
+This downloads the latest release for your Mac (Apple Silicon or Intel, macOS 13+), checks its SHA-256, copies Insomnia.app to `~/Applications`, links the CLI to `~/.local/bin/insomnia`, and opens the app. Run it again to update. Set `INSOMNIA_VERSION=v0.2.0` to pick a release, or `INSOMNIA_NO_OPEN=1` to skip launching.
+
+From source instead:
+
+```sh
 mise trust && mise install      # Bun, Node, dependencies
 mise run app:install            # builds and copies Insomnia.app to ~/Applications, links ~/.local/bin/insomnia
 open ~/Applications/Insomnia.app
@@ -63,5 +71,9 @@ mise run app:build    # build/Insomnia.app
 INSOMNIA_DEV_ROOT=$PWD build/Insomnia.app/Contents/MacOS/Insomnia   # shell + daemon from source
 INSOMNIA_STATE_DIR=/tmp/insomnia mise run daemon                    # throwaway state
 ```
+
+### Releasing
+
+Push a tag like `v0.2.0`. `.github/workflows/release.yml` runs `mise run check`, then `scripts/package-release.sh` builds `Insomnia-arm64.zip`, `Insomnia-x86_64.zip` and `SHA256SUMS` and publishes them as a GitHub release, which `install.sh` picks up as the latest. `mise run release:package` builds the same files into `dist/` locally.
 
 See [AGENTS.md](AGENTS.md) for the layout and conventions.

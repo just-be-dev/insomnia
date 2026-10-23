@@ -61,3 +61,7 @@ run = "scripts/install-app.sh"
 [tasks."effect-solutions"]
 description = "Browse Effect Solutions guides, e.g. `list` or `show <topic>`"
 run = "bunx effect-solutions"
+
+[tasks."release:package"]
+description = "Build arm64 and x86_64 Insomnia.app zips plus SHA256SUMS into dist/"
+run = "scripts/package-release.sh"
